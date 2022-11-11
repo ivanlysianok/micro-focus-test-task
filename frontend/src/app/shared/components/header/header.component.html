@@ -1,0 +1,13 @@
+<mat-toolbar>
+  <div class="container">
+    <ng-container class="d-flex justify-content-between">
+      <div>
+        <span class="me-2">{{ headerText }}</span>
+        <ng-content select="[header-action]"></ng-content>
+      </div>
+      <div>
+        <ng-content select="[header-content]"></ng-content>
+      </div>
+    </ng-container>
+  </div>
+</mat-toolbar>
