@@ -1,0 +1,22 @@
+<app-header headerText="Log In"></app-header>
+<div
+  class="container log-in-container d-flex align-items-center justify-content-center"
+>
+  <form [formGroup]="formGroup">
+    <mat-form-field appearance="fill">
+      <mat-label>User name</mat-label>
+      <input matInput formControlName="userName" />
+      <mat-error>Not a valid user name!</mat-error>
+    </mat-form-field>
+    <div class="d-flex justify-content-end">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onLogin()"
+        [disabled]="!userName.value || !userName.touched || !userName.dirty"
+      >
+        Log In
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,1 +1,21 @@
-<app-header headerText="Home" [isLoggedIn]="isLoggedIn"></app-header>
+<app-header headerText="Home">
+  <div headerContent>
+    <div classs="d-flex align-items-center">
+      <ng-container *ngIf="!user">
+        <span class="me-2">You are not logged in</span>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="onNavigateToLoginPage()"
+        >
+          Log In
+        </button>
+      </ng-container>
+      <ng-container *ngIf="user">
+        <span class="me-2">Welcome, {{ user.name }}!</span>
+        <button mat-raised-button color="primary" class="me-2">New post</button>
+        <button mat-raised-button (click)="onLogout()">Log out</button>
+      </ng-container>
+    </div>
+  </div>
+</app-header>

@@ -1,13 +1,12 @@
 <mat-toolbar>
   <div class="container">
-    <ng-container class="d-flex justify-content-between">
+    <div class="d-flex align-items-center justify-content-between">
       <div>
         <span class="me-2">{{ headerText }}</span>
-        <ng-content select="[header-action]"></ng-content>
+        <ng-content select="[headerNavigation]"></ng-content>
       </div>
-      <div>
-        <ng-content select="[header-content]"></ng-content>
-      </div>
-    </ng-container>
+
+      <ng-content select="[headerContent]"></ng-content>
+    </div>
   </div>
 </mat-toolbar>
