@@ -51,7 +51,7 @@ export class UpdatePostPageComponent implements OnInit {
     const postId = this.activatedRoute.snapshot.paramMap.get('id') as string;
     if (postId) {
       this.postService
-        .getPostByPostId(Number(postId))
+        .getPost(Number(postId))
         .subscribe((response: UserPost | null) => {
           if (!response) {
             return;
@@ -76,17 +76,42 @@ export class UpdatePostPageComponent implements OnInit {
     this.body.markAsDirty();
   }
 
+  protected onDeletePost(): void {
+    if (!this.userPost || !this.userPost.id) {
+      return;
+    }
+    this.postService
+      .deletePost(this.userPost.id)
+      .subscribe((response: boolean) => {
+        if (!response) {
+          return;
+        }
+        this.onNavigateToHomePage();
+      });
+  }
+
+  protected onUpdatePost(): void {
+    if (this.formGroup.invalid || !this.userPost) {
+      return;
+    }
+    const updatedPost: UserPost = {
+      id: this.userPost.id,
+      userId: this.userPost.userId,
+      title: this.title.value,
+      body: this.body.value,
+      user: this.userPost.user,
+    };
+    this.postService.updatePost(updatedPost).subscribe((response: boolean) => {
+      if (!response) {
+        return;
+      }
+      this.onNavigateToHomePage();
+    });
+  }
+
   protected onNavigateToHomePage(): void {
     this.router.navigate(['../../home-page'], {
       relativeTo: this.activatedRoute,
     });
-  }
-
-  protected onDeletePost(): void {
-    //
-  }
-
-  protected onSavePost(): void {
-    //
   }
 }

@@ -34,7 +34,7 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUser();
-    this.loadPostsWithUsers();
+    this.loadPosts();
     this.tableColumns = TABLE_COLUMNS;
   }
 
@@ -43,14 +43,14 @@ export class HomePageComponent implements OnInit {
     this.logoutSub.unsubscribe();
   }
 
-  private loadPostsWithUsers(): void {
+  private loadPosts(): void {
     this.postsWithUsersSub = this.postService
-      .getPostsList(this.pageSize, this.pageIndex)
+      .getPostList(this.pageSize, this.pageIndex)
       .subscribe((response) => {
         if (!response || !response.items) {
           return;
         }
-
+        console.log(response, 'posts');
         this.postsWithUsersList = response.items;
         this.totalLength = response.totalCount;
       });
@@ -82,20 +82,27 @@ export class HomePageComponent implements OnInit {
       .subscribe((response: boolean) => {
         if (response) {
           this.getUser();
+          this.loadPosts();
         }
       });
   }
 
   protected onPageChange(pageEvent: PageEvent): void {
     this.pageIndex = pageEvent.pageIndex;
-    this.loadPostsWithUsers();
+    this.loadPosts();
   }
 
-  protected onNavigate(routePath: string, id?: number): void {
-    if (id) {
-      routePath = `${routePath}/${id.toString()}`;
-    }
+  protected onNavigateToRoute(routePath: string): void {
     this.router.navigate(['../' + routePath], {
+      relativeTo: this.activatedRoute,
+    });
+  }
+
+  protected onNavigateToEditPost(postId: number): void {
+    if (!this.user) {
+      return;
+    }
+    this.router.navigate(['../edit-post/' + postId], {
       relativeTo: this.activatedRoute,
     });
   }
