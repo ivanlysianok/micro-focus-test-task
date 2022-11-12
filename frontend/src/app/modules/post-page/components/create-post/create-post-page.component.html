@@ -1,0 +1,19 @@
+<app-header headerText="New post">
+  <div headerNavigation>
+    <div classs="d-flex align-items-center">
+      <a
+        mat-button
+        color="primary"
+        class="p-0"
+        (click)="onNavigateToHomePage()"
+      >
+        Go back to home page
+      </a>
+    </div>
+  </div>
+  <div headerContent>
+    <div classs="d-flex align-items-center" *ngIf="user">
+      Welcome, {{ user.name }}!
+    </div>
+  </div>
+</app-header>

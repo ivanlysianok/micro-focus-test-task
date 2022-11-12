@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
@@ -14,8 +15,9 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss'],
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnDestroy {
   protected formGroup: FormGroup;
+  private loginSub = new Subscription();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -28,6 +30,10 @@ export class LoginPageComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    this.loginSub.unsubscribe();
+  }
+
   protected get userName(): AbstractControl {
     return this.formGroup.controls['userName'] as AbstractControl;
   }
@@ -36,7 +42,7 @@ export class LoginPageComponent {
     if (!this.userName.value) {
       return;
     }
-    this.authService
+    this.loginSub = this.authService
       .login(this.userName.value)
       .subscribe((response: boolean) => {
         if (response) {

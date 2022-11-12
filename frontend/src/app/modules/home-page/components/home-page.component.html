@@ -3,19 +3,73 @@
     <div classs="d-flex align-items-center">
       <ng-container *ngIf="!user">
         <span class="me-2">You are not logged in</span>
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="onNavigateToLoginPage()"
-        >
+        <button mat-raised-button color="primary" (click)="onNavigate('login')">
           Log In
         </button>
       </ng-container>
       <ng-container *ngIf="user">
         <span class="me-2">Welcome, {{ user.name }}!</span>
-        <button mat-raised-button color="primary" class="me-2">New post</button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="me-2"
+          (click)="onNavigate('create-post')"
+        >
+          New post
+        </button>
         <button mat-raised-button (click)="onLogout()">Log out</button>
       </ng-container>
     </div>
   </div>
 </app-header>
+<div class="container">
+  <table
+    mat-table
+    [dataSource]="postsWithUsersList"
+    class="table mt-4 mat-elevation-z8"
+  >
+    <ng-container matColumnDef="user">
+      <th mat-header-cell *matHeaderCellDef><h2>Users</h2></th>
+      <td mat-cell *matCellDef="let post">
+        <div class="d-flex align-items-start flex-column">
+          {{ post.user.name }}
+          <a
+            mat-button
+            color="primary"
+            class="p-0"
+            (click)="onNavigateToCompanyWeb(post.user.website)"
+          >
+            {{ post.user.company.name }}
+          </a>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="post">
+      <th mat-header-cell *matHeaderCellDef><h2>Posts</h2></th>
+      <td mat-cell *matCellDef="let post">
+        <div class="d-flex align-items-start flex-column">
+          <strong
+            ><a
+              mat-button
+              color="primary"
+              class="p-0"
+              (click)="onNavigate('edit-post', post.id)"
+              >{{ post.title }}</a
+            ></strong
+          >
+          {{ post.body }}
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
+  </table>
+  <mat-paginator
+    [length]="totalLength"
+    [pageSize]="pageSize"
+    (page)="onPageChange($event)"
+  >
+  </mat-paginator>
+</div>

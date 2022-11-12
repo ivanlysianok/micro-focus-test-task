@@ -1,0 +1,53 @@
+<app-header headerText="Edit post">
+  <div headerNavigation>
+    <a mat-button color="primary" class="p-0" (click)="onNavigateToHomePage()">
+      Go back to home page
+    </a>
+  </div>
+  <div headerContent>
+    <div classs="d-flex align-items-center" *ngIf="userPost && userPost.user">
+      Welcome, {{ userPost.user.name }}!
+    </div>
+  </div>
+</app-header>
+<div class="container">
+  <form [formGroup]="formGroup" class="mt-4">
+    <div class="d-flex flex-column">
+      <mat-form-field appearance="fill" class="mb-2">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" />
+        <mat-error>{{ getControlError(title, "title", 200) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Message</mat-label>
+        <textarea matInput formControlName="body"></textarea>
+        <mat-error>{{ getControlError(body, "message", 2000) }}</mat-error>
+      </mat-form-field>
+
+      <div class="d-flex align-items-center justify-content-between mt-4">
+        <button mat-raised-button color="warn" (click)="onDeletePost()">
+          Delete
+        </button>
+        <div>
+          <button
+            mat-raised-button
+            color="primary"
+            class="me-2"
+            [disabled]="formGroup.invalid || !title.dirty || !body.dirty"
+            (click)="onSavePost()"
+          >
+            Save
+          </button>
+          <button
+            mat-raised-button
+            [disabled]="formGroup.invalid || !title.dirty || !body.dirty"
+            (click)="onNavigateToHomePage()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

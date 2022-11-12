@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HomePageModule } from './modules/home-page/home-page.module';
 import { LoginPageModule } from './modules/login-page/login-page.module';
+import { PostPageModule } from './modules/post-page/post-page.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,6 +16,7 @@ import { LoginPageModule } from './modules/login-page/login-page.module';
     NoopAnimationsModule,
     HomePageModule,
     LoginPageModule,
+    PostPageModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
