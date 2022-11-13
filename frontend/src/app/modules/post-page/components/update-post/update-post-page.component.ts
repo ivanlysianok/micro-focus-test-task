@@ -6,10 +6,13 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getControlError } from 'src/app/shared/functions/get-control-error.function';
 import { UserPost } from 'src/app/shared/models/user-post.interface';
 import { PostService } from 'src/app/shared/services/post.service';
+import { CONFIRMATION_DIALOG_CONTENT } from '../../constants/confirmation-dialog-content.const';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-update-post-page',
@@ -25,7 +28,8 @@ export class UpdatePostPageComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private postService: PostService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog
   ) {
     this.formGroup = this.formBuilder.group({
       title: new FormControl<string | null>(null, [
@@ -80,13 +84,26 @@ export class UpdatePostPageComponent implements OnInit {
     if (!this.userPost || !this.userPost.id) {
       return;
     }
-    this.postService
-      .deletePost(this.userPost.id)
-      .subscribe((response: boolean) => {
-        if (!response) {
+    this.dialog
+      .open<ConfirmationDialogComponent>(ConfirmationDialogComponent, {
+        data: {
+          header: 'Delete post',
+          text: 'Are you sure you want delete this post?',
+        },
+      })
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (!result || !this.userPost?.id) {
           return;
         }
-        this.onNavigateToHomePage();
+        this.postService
+          .deletePost(this.userPost.id)
+          .subscribe((response: boolean) => {
+            if (!response) {
+              return;
+            }
+            this.onNavigateToHomePage();
+          });
       });
   }
 
@@ -109,7 +126,24 @@ export class UpdatePostPageComponent implements OnInit {
     });
   }
 
-  protected onNavigateToHomePage(): void {
+  protected onNavigateToHomePageWithConfirmation(): void {
+    this.dialog
+      .open<ConfirmationDialogComponent>(ConfirmationDialogComponent, {
+        data: {
+          header: CONFIRMATION_DIALOG_CONTENT.HEADER,
+          text: CONFIRMATION_DIALOG_CONTENT.TEXT,
+        },
+      })
+      .afterClosed()
+      .subscribe((result: boolean) => {
+        if (!result) {
+          return;
+        }
+        this.onNavigateToHomePage();
+      });
+  }
+
+  private onNavigateToHomePage(): void {
     this.router.navigate(['../../home-page'], {
       relativeTo: this.activatedRoute,
     });

@@ -1,24 +1,13 @@
-<app-header headerText="New post">
-  <div headerNavigation>
-    <div classs="d-flex align-items-center">
-      <a
-        mat-button
-        color="primary"
-        class="p-0"
-        (click)="onNavigateToHomePage()"
-      >
-        Go back to home page
-      </a>
-    </div>
-  </div>
-  <div headerContent>
-    <div classs="d-flex align-items-center" *ngIf="user">
-      Welcome, {{ user.name }}!
-    </div>
-  </div>
+<app-header
+  headerText="New post"
+  [showHomePageButton]="true"
+  [isLoggedIn]="true"
+  [userName]="user?.name"
+  (homePageButtonClick)="onNavigateToHomePageWithConfirmation()"
+>
 </app-header>
 <div class="container">
-  <form [formGroup]="formGroup" class="mt-4">
+  <form [formGroup]="formGroup" class="mt-3">
     <div class="d-flex flex-column">
       <mat-form-field appearance="fill" class="mb-2">
         <mat-label>Title</mat-label>
@@ -44,7 +33,7 @@
         <button
           mat-raised-button
           [disabled]="formGroup.invalid || !title.dirty || !body.dirty"
-          (click)="onNavigateToHomePage()"
+          (click)="onNavigateToHomePageWithConfirmation()"
         >
           Cancel
         </button>

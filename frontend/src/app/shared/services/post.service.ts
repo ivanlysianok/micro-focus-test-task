@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CollectionResult } from 'src/app/shared/models/collection-result.interface';
 import { User } from 'src/app/shared/models/user.interface';
@@ -131,7 +131,20 @@ export class PostService {
     return of(false);
   }
 
-  createPost(post: UserPost): Observable<boolean> {
+  createPost(createdPost: UserPost): Observable<boolean> {
+    if (!this.postList) {
+      return of(false);
+    }
+    console.log(this.postList, 'before adding');
+    this.postList.unshift(createdPost);
+    console.log(this.postList, 'after adding');
+    const postIndex = this.postList.findIndex(
+      (post: UserPost) => post.id === createdPost.id
+    );
+    if (postIndex !== -1) {
+      return of(true);
+    }
+
     return of(false);
   }
 }

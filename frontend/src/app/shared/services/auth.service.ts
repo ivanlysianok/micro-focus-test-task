@@ -19,7 +19,6 @@ export class AuthService {
           return of(false);
         }
 
-        console.log(users);
         const findUserByUserName = users.find(
           (user) => user.username === userName
         );
@@ -35,6 +34,12 @@ export class AuthService {
 
   logout(): Observable<boolean> {
     localStorage.removeItem('user');
-    return of(true);
+
+    const getUserFromLocalStorage = localStorage.getItem('user');
+    if (!getUserFromLocalStorage) {
+      return of(true);
+    }
+
+    return of(false);
   }
 }

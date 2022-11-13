@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>{{ data.header }}</h2>
+<mat-dialog-content class="mat-typography">
+  {{ data.text }}
+</mat-dialog-content>
+<div class="d-flex align-items-center justify-content-end">
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close (click)="onLeavePage(true)">Yes</button>
+    <button mat-button mat-dialog-close (click)="onLeavePage(false)">No</button>
+  </mat-dialog-actions>
+</div>

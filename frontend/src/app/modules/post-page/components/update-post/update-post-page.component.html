@@ -1,15 +1,10 @@
-<app-header headerText="Edit post">
-  <div headerNavigation>
-    <a mat-button color="primary" class="p-0" (click)="onNavigateToHomePage()">
-      Go back to home page
-    </a>
-  </div>
-  <div headerContent>
-    <div classs="d-flex align-items-center" *ngIf="userPost && userPost.user">
-      Welcome, {{ userPost.user.name }}!
-    </div>
-  </div>
-</app-header>
+<app-header
+  headerText="Edit post"
+  [userName]="userPost?.user?.name"
+  [showHomePageButton]="true"
+  [isLoggedIn]="true"
+  (homePageButtonClick)="onNavigateToHomePageWithConfirmation()"
+></app-header>
 <div class="container">
   <form [formGroup]="formGroup" class="mt-4">
     <div class="d-flex flex-column">
@@ -25,7 +20,7 @@
         <mat-error>{{ getControlError(body, "message", 2000) }}</mat-error>
       </mat-form-field>
 
-      <div class="d-flex align-items-center justify-content-between mt-4">
+      <div class="d-flex align-items-center justify-content-between mt-3">
         <button mat-raised-button color="warn" (click)="onDeletePost()">
           Delete
         </button>
@@ -42,7 +37,7 @@
           <button
             mat-raised-button
             [disabled]="formGroup.invalid || !title.dirty || !body.dirty"
-            (click)="onNavigateToHomePage()"
+            (click)="onNavigateToHomePageWithConfirmation()"
           >
             Cancel
           </button>

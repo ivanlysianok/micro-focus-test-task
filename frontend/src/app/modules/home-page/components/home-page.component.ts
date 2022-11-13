@@ -11,12 +11,12 @@ import { TABLE_COLUMNS } from '../constants/table-columns.conts';
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss'],
 })
 export class HomePageComponent implements OnInit {
   protected user: User | null = null;
   protected postsWithUsersList: UserPost[] = [];
   protected tableColumns: string[] = [];
+  protected userIsLoggedIn?: boolean;
 
   protected pageSize = 10;
   private pageIndex = 0;
@@ -58,10 +58,12 @@ export class HomePageComponent implements OnInit {
 
   private getUser(): void {
     this.user = null;
+    this.userIsLoggedIn = false;
     const userDataFromLocaleStorage = localStorage.getItem('user');
 
     if (userDataFromLocaleStorage) {
       this.user = JSON.parse(userDataFromLocaleStorage);
+      this.userIsLoggedIn = true;
     }
   }
 
@@ -98,12 +100,14 @@ export class HomePageComponent implements OnInit {
     });
   }
 
-  protected onNavigateToEditPost(postId: number): void {
+  protected onNavigateToEditPost(postId: number, userId: number): void {
     if (!this.user) {
       return;
     }
-    this.router.navigate(['../edit-post/' + postId], {
-      relativeTo: this.activatedRoute,
-    });
+    if (this.user.id === userId) {
+      this.router.navigate(['../edit-post/' + postId], {
+        relativeTo: this.activatedRoute,
+      });
+    }
   }
 }

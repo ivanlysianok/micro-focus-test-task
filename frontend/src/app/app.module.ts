@@ -18,7 +18,6 @@ import { PostPageModule } from './modules/post-page/post-page.module';
     LoginPageModule,
     PostPageModule,
   ],
-  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

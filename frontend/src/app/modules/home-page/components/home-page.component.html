@@ -1,36 +1,30 @@
-<app-header headerText="Home">
-  <div headerContent>
-    <div classs="d-flex align-items-center">
-      <ng-container *ngIf="!user">
-        <span class="me-2">You are not logged in</span>
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="onNavigateToRoute('login')"
-        >
-          Log In
-        </button>
-      </ng-container>
-      <ng-container *ngIf="user">
-        <span class="me-2">Welcome, {{ user.name }}!</span>
-        <button
-          mat-raised-button
-          color="primary"
-          class="me-2"
-          (click)="onNavigateToRoute('create-post')"
-        >
-          New post
-        </button>
-        <button mat-raised-button (click)="onLogout()">Log out</button>
-      </ng-container>
-    </div>
+<app-header
+  headerText="Home"
+  [isLoggedIn]="userIsLoggedIn"
+  [userName]="user?.name"
+>
+  <div logoutContent>
+    <button mat-raised-button (click)="onNavigateToRoute('login')">
+      Log In
+    </button>
+  </div>
+  <div loginContent>
+    <button
+      mat-raised-button
+      class="me-2"
+      (click)="onNavigateToRoute('create-post')"
+    >
+      New post
+    </button>
+    <button mat-raised-button (click)="onLogout()">Log out</button>
   </div>
 </app-header>
+
 <div class="container">
   <table
     mat-table
     [dataSource]="postsWithUsersList"
-    class="table mt-4 mat-elevation-z8"
+    class="w-100 mt-4 mat-elevation-z8"
   >
     <ng-container matColumnDef="user">
       <th mat-header-cell *matHeaderCellDef><h2>Users</h2></th>
@@ -58,7 +52,8 @@
               mat-button
               color="primary"
               class="p-0"
-              (click)="onNavigateToEditPost(post.id)"
+              (click)="onNavigateToEditPost(post.id, post.userId)"
+              [disabled]="post.userId !== user?.id"
               >{{ post.title }}</a
             ></strong
           >
