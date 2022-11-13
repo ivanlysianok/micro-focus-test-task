@@ -17,12 +17,14 @@ export class HomePageComponent implements OnInit {
   protected postsWithUsersList: UserPost[] = [];
   protected tableColumns: string[] = [];
   protected userIsLoggedIn?: boolean;
+  public postActionStateMessage = '';
 
   protected pageSize = 10;
   private pageIndex = 0;
   protected totalLength = 0;
 
   private postsWithUsersSub = new Subscription();
+  private postActionMessageSub = new Subscription();
   private logoutSub = new Subscription();
 
   constructor(
@@ -35,12 +37,25 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     this.getUser();
     this.loadPosts();
+    this.userPostActionMessageSub();
     this.tableColumns = TABLE_COLUMNS;
   }
 
   ngOnDestroy(): void {
     this.postsWithUsersSub.unsubscribe();
     this.logoutSub.unsubscribe();
+    this.postActionMessageSub.unsubscribe();
+  }
+
+  private userPostActionMessageSub(): void {
+    this.postActionMessageSub = this.postService
+      .getUserPostActionMessage()
+      .subscribe((response: string | null) => {
+        if (!response) {
+          return;
+        }
+        this.postActionStateMessage = response;
+      });
   }
 
   private loadPosts(): void {
@@ -87,6 +102,7 @@ export class HomePageComponent implements OnInit {
 
         this.getUser();
         this.loadPosts();
+        this.resetUserPostActionMessage();
       });
   }
 
@@ -110,5 +126,10 @@ export class HomePageComponent implements OnInit {
         relativeTo: this.activatedRoute,
       });
     }
+  }
+
+  private resetUserPostActionMessage(): void {
+    this.postService.userPostActionMessage = null;
+    this.postActionStateMessage = '';
   }
 }

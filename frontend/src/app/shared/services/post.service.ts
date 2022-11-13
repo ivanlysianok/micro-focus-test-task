@@ -5,6 +5,7 @@ import { switchMap } from 'rxjs/operators';
 import { CollectionResult } from 'src/app/shared/models/collection-result.interface';
 import { User } from 'src/app/shared/models/user.interface';
 import { URL_LIST } from '../constants/url-list.const';
+import { USER_POST_ACTION_MESSAGE } from '../constants/user-post-action-message.const';
 import { UserPost } from '../models/user-post.interface';
 
 @Injectable()
@@ -13,6 +14,10 @@ export class PostService {
    * List of user posts that are loaded from API and then updated locally
    */
   private userPostList: UserPost[] = [];
+  /**
+   * User post action (Create, Update, Delete) state message
+   */
+  public userPostActionMessage: string | null = null;
   /**
    * Flag for distinguishing between local load / server load
    */
@@ -156,6 +161,7 @@ export class PostService {
     );
     if (postIndex !== -1) {
       this.userPostList.splice(postIndex, 1);
+      this.userPostActionMessage = USER_POST_ACTION_MESSAGE.DELETE;
       return of(true);
     }
     return of(false);
@@ -181,6 +187,7 @@ export class PostService {
         }
         return post;
       });
+      this.userPostActionMessage = USER_POST_ACTION_MESSAGE.UPDATE;
       return of(true);
     }
     return of(false);
@@ -201,9 +208,21 @@ export class PostService {
       (post: UserPost) => post.id === createdPost.id
     );
     if (postIndex !== -1) {
+      this.userPostActionMessage = USER_POST_ACTION_MESSAGE.CREATE;
       return of(true);
     }
 
     return of(false);
+  }
+
+  /**
+   * Get post action (Create, Delete, Update) message
+   * @returns Observable with @see{@link userPostActionMessage} or NULL
+   */
+  getUserPostActionMessage(): Observable<string | null> {
+    if (!this.userPostActionMessage) {
+      return of(null);
+    }
+    return of(this.userPostActionMessage);
   }
 }

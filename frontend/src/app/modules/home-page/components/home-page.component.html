@@ -19,12 +19,16 @@
     <button mat-raised-button (click)="onLogout()">Log out</button>
   </div>
 </app-toolbar>
-
 <div class="container">
+  <div *ngIf="postActionStateMessage" class="mt-2">
+    <h4 class="text-success">
+      {{ postActionStateMessage }}
+    </h4>
+  </div>
   <table
     mat-table
     [dataSource]="postsWithUsersList"
-    class="w-100 mt-4 mat-elevation-z8"
+    class="w-100 mt-3 mat-elevation-z8"
   >
     <ng-container matColumnDef="user">
       <th mat-header-cell *matHeaderCellDef><h2 class="mb-0">Users</h2></th>
