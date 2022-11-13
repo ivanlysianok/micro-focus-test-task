@@ -2,7 +2,7 @@
 
 Angular exercise application for Micro Focus. 
 
-**Check out demo video:** https://www.youtube.com/watch?v=B1qFpBfgzrM&ab_channel=IvanLysianok
+**Check out demo video:** https://www.youtube.com/watch?v=j8_htwyyVsk&ab_channel=IvanLysianok
 
 ### Overview of application pages
 
