@@ -1,23 +1,25 @@
-<app-header
-  headerText="Edit post"
+<app-toolbar
+  header="Edit post"
   [userName]="userPost?.user?.name"
   [showHomePageButton]="true"
-  [isLoggedIn]="true"
+  [userIsLoggedIn]="true"
   (homePageButtonClick)="onNavigateToHomePageWithConfirmation()"
-></app-header>
+></app-toolbar>
 <div class="container">
   <form [formGroup]="formGroup" class="mt-4">
     <div class="d-flex flex-column">
       <mat-form-field appearance="fill" class="mb-2">
         <mat-label>Title</mat-label>
         <input matInput formControlName="title" />
-        <mat-error>{{ getControlError(title, "title", 200) }}</mat-error>
+        <mat-error>{{ getControlErrorMessage(title, "title", 200) }}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Message</mat-label>
         <textarea matInput formControlName="body" rows="5" cols="40"></textarea>
-        <mat-error>{{ getControlError(body, "message", 2000) }}</mat-error>
+        <mat-error>{{
+          getControlErrorMessage(body, "message", 2000)
+        }}</mat-error>
       </mat-form-field>
 
       <div class="d-flex align-items-center justify-content-between mt-3">

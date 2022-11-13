@@ -45,12 +45,11 @@ export class HomePageComponent implements OnInit {
 
   private loadPosts(): void {
     this.postsWithUsersSub = this.postService
-      .getPostList(this.pageSize, this.pageIndex)
+      .getUserPostList(this.pageSize, this.pageIndex)
       .subscribe((response) => {
         if (!response || !response.items) {
           return;
         }
-        console.log(response, 'posts');
         this.postsWithUsersList = response.items;
         this.totalLength = response.totalCount;
       });
@@ -59,10 +58,10 @@ export class HomePageComponent implements OnInit {
   private getUser(): void {
     this.user = null;
     this.userIsLoggedIn = false;
-    const userDataFromLocaleStorage = localStorage.getItem('user');
+    const getUserFromLocalStorage = localStorage.getItem('user');
 
-    if (userDataFromLocaleStorage) {
-      this.user = JSON.parse(userDataFromLocaleStorage);
+    if (getUserFromLocalStorage) {
+      this.user = JSON.parse(getUserFromLocalStorage);
       this.userIsLoggedIn = true;
     }
   }
@@ -82,10 +81,12 @@ export class HomePageComponent implements OnInit {
     this.logoutSub = this.authService
       .logout()
       .subscribe((response: boolean) => {
-        if (response) {
-          this.getUser();
-          this.loadPosts();
+        if (!response) {
+          return;
         }
+
+        this.getUser();
+        this.loadPosts();
       });
   }
 

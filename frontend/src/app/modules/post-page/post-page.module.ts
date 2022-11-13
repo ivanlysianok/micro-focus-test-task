@@ -12,11 +12,6 @@ import { PostPageRoutingModule } from './post-page-routing.module';
     ConfirmationDialogComponent,
   ],
   imports: [SharedModule, PostPageRoutingModule],
-  exports: [
-    CreatePostPageComponent,
-    UpdatePostPageComponent,
-    ConfirmationDialogComponent,
-  ],
   providers: [PostService],
 })
 export class PostPageModule {}

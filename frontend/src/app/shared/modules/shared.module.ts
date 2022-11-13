@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HeaderComponent } from '../components/header/header.component';
+import { ToolbarComponent } from '../components/header/toolbar.component';
 import { MaterialModule } from './material.module';
 
 @NgModule({
-  declarations: [HeaderComponent],
+  declarations: [ToolbarComponent],
   imports: [
     MaterialModule,
     CommonModule,
@@ -20,7 +20,7 @@ import { MaterialModule } from './material.module';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    HeaderComponent,
+    ToolbarComponent,
   ],
 })
 export class SharedModule {}

@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getControlError } from 'src/app/shared/functions/get-control-error.function';
+import { getControlErrorMessage } from 'src/app/shared/functions/get-control-error-message.function';
 import { UserPost } from 'src/app/shared/models/user-post.interface';
 import { PostService } from 'src/app/shared/services/post.service';
 import { CONFIRMATION_DIALOG_CONTENT } from '../../constants/confirmation-dialog-content.const';
@@ -17,12 +17,11 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 @Component({
   selector: 'app-update-post-page',
   templateUrl: './update-post-page.component.html',
-  styleUrls: ['./update-post-page.component.scss'],
 })
 export class UpdatePostPageComponent implements OnInit {
   protected userPost: UserPost | null = null;
   protected formGroup: FormGroup;
-  protected getControlError = getControlError;
+  protected getControlErrorMessage = getControlErrorMessage;
 
   constructor(
     private router: Router,

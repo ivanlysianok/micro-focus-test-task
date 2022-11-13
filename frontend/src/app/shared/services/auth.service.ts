@@ -3,35 +3,41 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { User } from 'src/app/shared/models/user.interface';
+import { URL_LIST } from '../constants/url-list.const';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AuthService {
-  private baseUri = 'https://jsonplaceholder.typicode.com';
-
   constructor(private httpClient: HttpClient) {}
 
+  /**
+   * Find user from /users API and save him in to localStorage
+   * @param userName user name param
+   * @returns Observable TRUE if user is found out and added to localStorage,
+   * otherwise Observable FALSE
+   */
   login(userName: string): Observable<boolean> {
-    return this.httpClient.get<User[]>(`${this.baseUri}/users`).pipe(
+    return this.httpClient.get<User[]>(`${URL_LIST.BASE}/users`).pipe(
       switchMap((users: User[]) => {
         if (!users || !users.length) {
           return of(false);
         }
 
-        const findUserByUserName = users.find(
-          (user) => user.username === userName
-        );
-        if (findUserByUserName) {
-          localStorage.setItem('user', JSON.stringify(findUserByUserName));
+        const user = users.find((user) => user.username === userName);
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
           return of(true);
-        } else {
-          return of(false);
         }
+
+        return of(false);
       })
     );
   }
 
+  /**
+   * Provide deletion of user from localStorage
+   * @returns Observable TRUE if user is deleted successfully, otherwise
+   * Observable FALSE
+   */
   logout(): Observable<boolean> {
     localStorage.removeItem('user');
 

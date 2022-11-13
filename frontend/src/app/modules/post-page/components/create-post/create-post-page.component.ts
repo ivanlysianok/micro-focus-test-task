@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getControlError } from 'src/app/shared/functions/get-control-error.function';
+import { getControlErrorMessage } from 'src/app/shared/functions/get-control-error-message.function';
 import { UserPost } from 'src/app/shared/models/user-post.interface';
 import { User } from 'src/app/shared/models/user.interface';
 import { PostService } from 'src/app/shared/services/post.service';
@@ -18,12 +18,11 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 @Component({
   selector: 'app-create-post-page',
   templateUrl: './create-post-page.component.html',
-  styleUrls: ['./create-post-page.component.scss'],
 })
 export class CreatePostPageComponent implements OnInit {
   protected user: User | null = null;
   protected formGroup: FormGroup;
-  protected getControlError = getControlError;
+  protected getControlErrorMessage = getControlErrorMessage;
 
   constructor(
     private router: Router,
@@ -45,9 +44,9 @@ export class CreatePostPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const userDataFromLocaleStorage = localStorage.getItem('user');
-    if (userDataFromLocaleStorage) {
-      this.user = JSON.parse(userDataFromLocaleStorage);
+    const getUserFromLocalStorage = localStorage.getItem('user');
+    if (getUserFromLocalStorage) {
+      this.user = JSON.parse(getUserFromLocalStorage);
     }
   }
 

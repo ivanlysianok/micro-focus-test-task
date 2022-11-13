@@ -1,0 +1,30 @@
+<mat-toolbar color="primary">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        {{ header }}
+        <a
+          *ngIf="showHomePageButton"
+          class="custom-font-style custom-link-style ms-3"
+          mat-button
+          (click)="homePageButtonClick.emit()"
+        >
+          Go back to home page
+        </a>
+      </div>
+
+      <ng-container *ngIf="userIsLoggedIn !== undefined">
+        <div *ngIf="userIsLoggedIn" class="d-flex align-items-center">
+          <span class="custom-font-style me-3" *ngIf="userName"
+            >Welcome, {{ userName }}!</span
+          >
+          <ng-content select="[login]"></ng-content>
+        </div>
+        <div *ngIf="!userIsLoggedIn" class="d-flex align-items-center">
+          <span class="custom-font-style me-3">You are not logged in</span>
+          <ng-content select="[logout]"></ng-content>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</mat-toolbar>
