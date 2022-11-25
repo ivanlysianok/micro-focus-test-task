@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { getControlErrorMessage } from 'src/app/shared/functions/get-control-error-message.function';
 import { UserPost } from 'src/app/shared/models/user-post.interface';
 import { PostService } from 'src/app/shared/services/post.service';
@@ -18,10 +19,11 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
   selector: 'app-update-post-page',
   templateUrl: './update-post-page.component.html',
 })
-export class UpdatePostPageComponent implements OnInit {
+export class UpdatePostPageComponent implements OnInit, OnDestroy {
   protected userPost: UserPost | null = null;
   protected formGroup: FormGroup;
   protected getControlErrorMessage = getControlErrorMessage;
+  private subscriptionsList: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -53,16 +55,22 @@ export class UpdatePostPageComponent implements OnInit {
   ngOnInit(): void {
     const postId = this.activatedRoute.snapshot.paramMap.get('id') as string;
     if (postId) {
-      this.postService
-        .getPost(Number(postId))
-        .subscribe((response: UserPost | null) => {
-          if (!response) {
-            return;
-          }
-          this.userPost = response;
-        });
+      this.subscriptionsList.push(
+        this.postService
+          .getPost(Number(postId))
+          .subscribe((response: UserPost | null) => {
+            if (!response) {
+              return;
+            }
+            this.userPost = response;
+          })
+      );
     }
     this.patchFormGroup();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptionsList.forEach((sub: Subscription) => sub.unsubscribe());
   }
 
   private patchFormGroup(): void {
@@ -95,14 +103,16 @@ export class UpdatePostPageComponent implements OnInit {
         if (!result || !this.userPost?.id) {
           return;
         }
-        this.postService
-          .deletePost(this.userPost.id)
-          .subscribe((response: boolean) => {
-            if (!response) {
-              return;
-            }
-            this.onNavigateToHomePage();
-          });
+        this.subscriptionsList.push(
+          this.postService
+            .deletePost(this.userPost.id)
+            .subscribe((response: boolean) => {
+              if (!response) {
+                return;
+              }
+              this.onNavigateToHomePage();
+            })
+        );
       });
   }
 
@@ -117,12 +127,16 @@ export class UpdatePostPageComponent implements OnInit {
       body: this.body.value,
       user: this.userPost.user,
     };
-    this.postService.updatePost(updatedPost).subscribe((response: boolean) => {
-      if (!response) {
-        return;
-      }
-      this.onNavigateToHomePage();
-    });
+    this.subscriptionsList.push(
+      this.postService
+        .updatePost(updatedPost)
+        .subscribe((response: boolean) => {
+          if (!response) {
+            return;
+          }
+          this.onNavigateToHomePage();
+        })
+    );
   }
 
   protected onNavigateToHomePageWithConfirmation(): void {

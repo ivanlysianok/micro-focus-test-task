@@ -33,6 +33,14 @@ export class AuthService {
     );
   }
 
+  getUser(): Observable<User | null> {
+    const user = localStorage.getItem('user');
+    if (user) {
+      return of(JSON.parse(user));
+    }
+    return of(null);
+  }
+
   /**
    * Provide deletion of user from localStorage
    * @returns Observable TRUE if user is deleted successfully, otherwise

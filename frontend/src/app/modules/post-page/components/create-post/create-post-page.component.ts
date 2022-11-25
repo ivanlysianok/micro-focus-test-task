@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -8,10 +8,13 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getControlErrorMessage } from 'src/app/shared/functions/get-control-error-message.function';
-import { UserPost } from 'src/app/shared/models/user-post.interface';
-import { User } from 'src/app/shared/models/user.interface';
-import { PostService } from 'src/app/shared/services/post.service';
+import { Subscription } from 'rxjs';
+import { NotificationService } from '../../../..//shared/services/notification.service';
+import { getControlErrorMessage } from '../../../../shared/functions/get-control-error-message.function';
+import { UserPost } from '../../../../shared/models/user-post.interface';
+import { User } from '../../../../shared/models/user.interface';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { PostService } from '../../../../shared/services/post.service';
 import { CONFIRMATION_DIALOG_CONTENT } from '../../constants/confirmation-dialog-content.const';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
@@ -19,16 +22,19 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
   selector: 'app-create-post-page',
   templateUrl: './create-post-page.component.html',
 })
-export class CreatePostPageComponent implements OnInit {
+export class CreatePostPageComponent implements OnInit, OnDestroy {
   protected user: User | null = null;
   protected formGroup: FormGroup;
   protected getControlErrorMessage = getControlErrorMessage;
+  private subscriptionsList: Subscription[] = [];
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private postService: PostService,
+    private authService: AuthService,
+    private notificationService: NotificationService,
     private dialog: MatDialog
   ) {
     this.formGroup = this.formBuilder.group({
@@ -44,10 +50,18 @@ export class CreatePostPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const getUserFromLocalStorage = localStorage.getItem('user');
-    if (getUserFromLocalStorage) {
-      this.user = JSON.parse(getUserFromLocalStorage);
-    }
+    this.subscriptionsList.push(
+      this.authService.getUser().subscribe((user: User | null) => {
+        if (!user) {
+          return;
+        }
+        this.user = user;
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptionsList.forEach((sub: Subscription) => sub.unsubscribe());
   }
 
   protected get title(): AbstractControl {
@@ -56,6 +70,10 @@ export class CreatePostPageComponent implements OnInit {
 
   protected get body(): AbstractControl {
     return this.formGroup.controls['body'] as AbstractControl;
+  }
+
+  private onNavigateToHomePage(): void {
+    this.router.navigate(['../home-page'], { relativeTo: this.activatedRoute });
   }
 
   protected onNavigateToHomePageWithConfirmation(): void {
@@ -75,10 +93,6 @@ export class CreatePostPageComponent implements OnInit {
       });
   }
 
-  private onNavigateToHomePage(): void {
-    this.router.navigate(['../home-page'], { relativeTo: this.activatedRoute });
-  }
-
   protected onCreatePost(): void {
     if (!this.user || this.formGroup.invalid) {
       return;
@@ -91,12 +105,15 @@ export class CreatePostPageComponent implements OnInit {
       user: this.user,
     };
     if (createdPost) {
-      this.postService.createPost(createdPost).subscribe((response) => {
-        if (!response) {
-          return;
-        }
-        this.onNavigateToHomePage();
-      });
+      this.subscriptionsList.push(
+        this.postService.createPost(createdPost).subscribe((response) => {
+          if (!response) {
+            return;
+          }
+          this.notificationService.showNotification('Hello');
+          this.onNavigateToHomePage();
+        })
+      );
     }
   }
 }

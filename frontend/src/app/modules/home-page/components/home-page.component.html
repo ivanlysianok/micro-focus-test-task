@@ -35,12 +35,7 @@
       <td mat-cell *matCellDef="let post" class="pe-3 py-2">
         <div class="d-flex align-items-start flex-column">
           {{ post.user.name }}
-          <a
-            mat-button
-            color="primary"
-            class="p-0"
-            (click)="onNavigateToCompanyWeb(post.user.website)"
-          >
+          <a mat-button color="primary" class="p-0">
             {{ post.user.company.name }}
           </a>
         </div>
