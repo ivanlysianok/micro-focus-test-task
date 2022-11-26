@@ -9,13 +9,13 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { NOTIFICATION } from '../../../../shared/constants/notification.const';
 import { NotificationService } from '../../../..//shared/services/notification.service';
-import { getControlErrorMessage } from '../../../../shared/functions/get-control-error-message.function';
 import { UserPost } from '../../../../shared/models/user-post.interface';
 import { User } from '../../../../shared/models/user.interface';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { PostService } from '../../../../shared/services/post.service';
-import { CONFIRMATION_DIALOG_CONTENT } from '../../constants/confirmation-dialog-content.const';
+import { CONFIRMATION_DIALOG } from '../../constants/confirmation-dialog.const';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
@@ -25,7 +25,6 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 export class CreatePostPageComponent implements OnInit, OnDestroy {
   protected user: User | null = null;
   protected formGroup: FormGroup;
-  protected getControlErrorMessage = getControlErrorMessage;
   private subscriptionsList: Subscription[] = [];
 
   constructor(
@@ -73,15 +72,17 @@ export class CreatePostPageComponent implements OnInit, OnDestroy {
   }
 
   private onNavigateToHomePage(): void {
-    this.router.navigate(['../home-page'], { relativeTo: this.activatedRoute });
+    this.router.navigate(['../../home-page'], {
+      relativeTo: this.activatedRoute,
+    });
   }
 
   protected onNavigateToHomePageWithConfirmation(): void {
     this.dialog
       .open<ConfirmationDialogComponent>(ConfirmationDialogComponent, {
         data: {
-          header: CONFIRMATION_DIALOG_CONTENT.HEADER,
-          text: CONFIRMATION_DIALOG_CONTENT.TEXT,
+          header: CONFIRMATION_DIALOG.LEAVE_HEADER,
+          text: CONFIRMATION_DIALOG.LEAVE_TEXT,
         },
       })
       .afterClosed()
@@ -110,7 +111,7 @@ export class CreatePostPageComponent implements OnInit, OnDestroy {
           if (!response) {
             return;
           }
-          this.notificationService.showNotification('Hello');
+          this.notificationService.showNotification(NOTIFICATION.POST_CREATED);
           this.onNavigateToHomePage();
         })
       );

@@ -4,7 +4,10 @@
   [userName]="user?.name"
 >
   <div logout>
-    <button mat-raised-button (click)="onNavigateToRoute('login')">
+    <button
+      mat-raised-button
+      (click)="onNavigateToRoute(NAVIGATION_ROUTES.LOGIN)"
+    >
       Log In
     </button>
   </div>
@@ -12,7 +15,7 @@
     <button
       mat-raised-button
       class="me-2"
-      (click)="onNavigateToRoute('create-post')"
+      (click)="onNavigateToRoute(NAVIGATION_ROUTES.CREATE_POST)"
     >
       New post
     </button>
@@ -20,11 +23,6 @@
   </div>
 </app-toolbar>
 <div class="container">
-  <div *ngIf="postActionStateMessage" class="mt-2">
-    <h4 class="text-success">
-      {{ postActionStateMessage }}
-    </h4>
-  </div>
   <table
     mat-table
     [dataSource]="postsWithUsersList"
@@ -61,8 +59,8 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="TABLE_COLUMNS"></tr>
+    <tr mat-row *matRowDef="let row; columns: TABLE_COLUMNS"></tr>
   </table>
   <mat-paginator
     class="mt-3"

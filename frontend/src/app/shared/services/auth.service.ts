@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { User } from 'src/app/shared/models/user.interface';
-import { URL_LIST } from '../constants/url-list.const';
+import { User } from '../models/user.interface';
+import { URL } from '../constants/url.const';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +16,7 @@ export class AuthService {
    * otherwise Observable FALSE
    */
   login(userName: string): Observable<boolean> {
-    return this.httpClient.get<User[]>(`${URL_LIST.BASE}/users`).pipe(
+    return this.httpClient.get<User[]>(`${URL.BASE}/users`).pipe(
       switchMap((users: User[]) => {
         if (!users || !users.length) {
           return of(false);
@@ -33,14 +33,6 @@ export class AuthService {
     );
   }
 
-  getUser(): Observable<User | null> {
-    const user = localStorage.getItem('user');
-    if (user) {
-      return of(JSON.parse(user));
-    }
-    return of(null);
-  }
-
   /**
    * Provide deletion of user from localStorage
    * @returns Observable TRUE if user is deleted successfully, otherwise
@@ -55,5 +47,17 @@ export class AuthService {
     }
 
     return of(false);
+  }
+
+  /**
+   * Check if user value is stored in localeStorage, if so return it;
+   * @returns User or NULL
+   */
+  getUser(): Observable<User | null> {
+    const user = localStorage.getItem('user');
+    if (user) {
+      return of(JSON.parse(user));
+    }
+    return of(null);
   }
 }

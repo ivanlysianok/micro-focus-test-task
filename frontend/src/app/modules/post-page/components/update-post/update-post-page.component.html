@@ -1,50 +1,55 @@
-<app-toolbar
-  header="Edit post"
-  [userName]="userPost?.user?.name"
-  [showHomePageButton]="true"
-  [userIsLoggedIn]="true"
-  (homePageButtonClick)="onNavigateToHomePageWithConfirmation()"
-></app-toolbar>
-<div class="container">
-  <form [formGroup]="formGroup" class="mt-4">
-    <div class="d-flex flex-column">
-      <mat-form-field appearance="fill" class="mb-2">
-        <mat-label>Title</mat-label>
-        <input matInput formControlName="title" />
-        <mat-error>{{ getControlErrorMessage(title, "title", 200) }}</mat-error>
-      </mat-form-field>
+<ng-container *ngIf="userPost && userPost.user">
+  <app-toolbar
+    header="Edit post"
+    [userName]="userPost.user.name"
+    [showHomePageButton]="true"
+    [userIsLoggedIn]="true"
+    (homePageButtonClick)="onNavigateToHomePageWithConfirmation()"
+  ></app-toolbar>
+  <div class="container">
+    <form [formGroup]="formGroup" class="mt-4">
+      <div class="d-flex flex-column">
+        <mat-form-field appearance="fill" class="mb-2">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" />
+          <mat-error>{{ title | errorMsg: "title":200 }}</mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Message</mat-label>
-        <textarea matInput formControlName="body" rows="5" cols="40"></textarea>
-        <mat-error>{{
-          getControlErrorMessage(body, "message", 2000)
-        }}</mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Message</mat-label>
+          <textarea
+            matInput
+            formControlName="body"
+            rows="5"
+            cols="40"
+          ></textarea>
+          <mat-error>{{ body | errorMsg: "message":2000 }}</mat-error>
+        </mat-form-field>
 
-      <div class="d-flex align-items-center justify-content-between mt-3">
-        <button mat-raised-button color="warn" (click)="onDeletePost()">
-          Delete
-        </button>
-        <div>
-          <button
-            mat-raised-button
-            color="primary"
-            class="me-2"
-            [disabled]="formGroup.invalid || !title.dirty || !body.dirty"
-            (click)="onUpdatePost()"
-          >
-            Save
+        <div class="d-flex align-items-center justify-content-between mt-3">
+          <button mat-raised-button color="warn" (click)="onDeletePost()">
+            Delete
           </button>
-          <button
-            mat-raised-button
-            [disabled]="formGroup.invalid || !title.dirty || !body.dirty"
-            (click)="onNavigateToHomePageWithConfirmation()"
-          >
-            Cancel
-          </button>
+          <div>
+            <button
+              mat-raised-button
+              color="primary"
+              class="me-2"
+              [disabled]="formGroup.invalid || !title.dirty || !body.dirty"
+              (click)="onUpdatePost()"
+            >
+              Save
+            </button>
+            <button
+              mat-raised-button
+              [disabled]="formGroup.invalid || !title.dirty || !body.dirty"
+              (click)="onNavigateToHomePageWithConfirmation()"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </form>
-</div>
+    </form>
+  </div>
+</ng-container>

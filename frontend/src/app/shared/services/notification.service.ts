@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -6,7 +5,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class NotificationService {
   constructor(private snackBar: MatSnackBar) {}
 
-  showNotification(notificationMsg: string): void {
-    this.snackBar.open(notificationMsg, undefined, { duration: 2000 });
+  /**
+   * Show snack bar notification with inserted message
+   * @param message Message
+   */
+  showNotification(message: string): void {
+    this.snackBar.open(message, 'Close', { duration: 2500 });
   }
 }

@@ -1,3 +1,3 @@
-export const URL_LIST = {
+export const URL = {
   BASE: 'https://jsonplaceholder.typicode.com',
 };

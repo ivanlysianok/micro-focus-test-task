@@ -7,6 +7,7 @@ import { CreatePostPageComponent } from './components/create-post/create-post-pa
 import { UpdatePostPageComponent } from './components/update-post/update-post-page.component';
 import { PostPageRoutingModule } from './post-page-routing.module';
 import { NotificationService } from '../../shared/services/notification.service';
+import { AuthGuard } from '../../shared/guards/auth.guard';
 @NgModule({
   declarations: [
     CreatePostPageComponent,
@@ -14,6 +15,6 @@ import { NotificationService } from '../../shared/services/notification.service'
     ConfirmationDialogComponent,
   ],
   imports: [SharedModule, PostPageRoutingModule],
-  providers: [PostService, AuthService, NotificationService],
+  providers: [PostService, AuthService, NotificationService, AuthGuard],
 })
 export class PostPageModule {}

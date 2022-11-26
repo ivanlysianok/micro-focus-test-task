@@ -2,10 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UserPost } from 'src/app/shared/models/user-post.interface';
-import { User } from 'src/app/shared/models/user.interface';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { PostService } from 'src/app/shared/services/post.service';
+import { UserPost } from '../../../shared/models/user-post.interface';
+import { User } from '../../../shared/models/user.interface';
+import { AuthService } from '../../../shared/services/auth.service';
+import { PostService } from '../../../shared/services/post.service';
+import { NAVIGATION_ROUTES } from '../constants/navigation-routes.const';
 import { PAGINATION_DATA } from '../constants/pagination-data.const';
 import { TABLE_COLUMNS } from '../constants/table-columns.conts';
 
@@ -16,9 +17,10 @@ import { TABLE_COLUMNS } from '../constants/table-columns.conts';
 export class HomePageComponent implements OnInit, OnDestroy {
   protected user: User | null = null;
   protected postsWithUsersList: UserPost[] = [];
-  protected tableColumns = TABLE_COLUMNS;
   protected userIsLoggedIn?: boolean;
-  public postActionStateMessage = '';
+
+  protected TABLE_COLUMNS = TABLE_COLUMNS;
+  protected NAVIGATION_ROUTES = NAVIGATION_ROUTES;
 
   protected pageSize = PAGINATION_DATA.SIZE;
   private pageIndex = PAGINATION_DATA.INDEX;
@@ -36,23 +38,23 @@ export class HomePageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getUser();
     this.loadPosts();
-    this.userPostActionMessageSub();
   }
 
   ngOnDestroy(): void {
     this.subscriptionsList.forEach((sub: Subscription) => sub.unsubscribe());
   }
 
-  private userPostActionMessageSub(): void {
+  private getUser(): void {
     this.subscriptionsList.push(
-      this.postService
-        .getUserPostActionMessage()
-        .subscribe((response: string | null) => {
-          if (!response) {
-            return;
-          }
-          this.postActionStateMessage = response;
-        })
+      this.authService.getUser().subscribe((user: User | null) => {
+        if (!user) {
+          this.user = user;
+          this.userIsLoggedIn = false;
+          return;
+        }
+        this.user = user;
+        this.userIsLoggedIn = true;
+      })
     );
   }
 
@@ -70,20 +72,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getUser(): void {
-    this.subscriptionsList.push(
-      this.authService.getUser().subscribe((user: User | null) => {
-        if (!user) {
-          this.user = user;
-          this.userIsLoggedIn = false;
-          return;
-        }
-        this.user = user;
-        this.userIsLoggedIn = true;
-      })
-    );
-  }
-
   protected onLogout(): void {
     if (!this.user) {
       return;
@@ -96,7 +84,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
         this.getUser();
         this.loadPosts();
-        this.resetUserPostActionMessage();
       })
     );
   }
@@ -106,8 +93,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.loadPosts();
   }
 
-  protected onNavigateToRoute(routePath: string): void {
-    this.router.navigate(['../' + routePath], {
+  protected onNavigateToRoute(route: string): void {
+    this.router.navigate(['../' + route], {
       relativeTo: this.activatedRoute,
     });
   }
@@ -117,14 +104,9 @@ export class HomePageComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.user.id === userId) {
-      this.router.navigate(['../edit-post/' + postId], {
+      this.router.navigate(['../posts/edit-post/' + postId], {
         relativeTo: this.activatedRoute,
       });
     }
-  }
-
-  private resetUserPostActionMessage(): void {
-    this.postService.userPostActionMessage = null;
-    this.postActionStateMessage = '';
   }
 }

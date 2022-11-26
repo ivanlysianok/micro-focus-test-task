@@ -4,11 +4,12 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/shared/services/auth.service';
+import { NOTIFICATION } from '../../../shared/constants/notification.const';
+import { NotificationService } from '../../../shared/services/notification.service';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-login-page',
@@ -22,6 +23,7 @@ export class LoginPageComponent implements OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private notificationService: NotificationService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -50,7 +52,9 @@ export class LoginPageComponent implements OnDestroy {
             relativeTo: this.activatedRoute,
           });
         } else {
-          this.userName.setErrors({ invalidUser: true });
+          this.notificationService.showNotification(
+            NOTIFICATION.INVALID_USERNAME
+          );
         }
       });
   }
