@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../../shared/modules/shared.module';
 import { AuthService } from '../../shared/services/auth.service';
-import { PostService } from 'src/app/shared/services/post.service';
+import { PostService } from '../../shared/services/post.service';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { CreatePostPageComponent } from './components/create-post/create-post-page.component';
 import { UpdatePostPageComponent } from './components/update-post/update-post-page.component';

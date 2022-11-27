@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { User } from '../models/user.interface';
 import { URL } from '../constants/url.const';
 
@@ -10,25 +10,23 @@ export class AuthService {
   constructor(private httpClient: HttpClient) {}
 
   /**
-   * Find user from /users API and save him in to localStorage
-   * @param userName user name param
+   * Find user in /users API and save him in to localStorage
+   * @param userName user name
    * @returns Observable TRUE if user is found out and added to localStorage,
    * otherwise Observable FALSE
    */
   login(userName: string): Observable<boolean> {
     return this.httpClient.get<User[]>(`${URL.BASE}/users`).pipe(
-      switchMap((users: User[]) => {
+      map((users: User[]) => {
         if (!users || !users.length) {
-          return of(false);
+          return false;
         }
-
         const user = users.find((user) => user.username === userName);
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));
-          return of(true);
+          return true;
         }
-
-        return of(false);
+        return false;
       })
     );
   }
@@ -50,7 +48,7 @@ export class AuthService {
   }
 
   /**
-   * Check if user value is stored in localeStorage, if so return it;
+   * Get user from localStorage
    * @returns User or NULL
    */
   getUser(): Observable<User | null> {

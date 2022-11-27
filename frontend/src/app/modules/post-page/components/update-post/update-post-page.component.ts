@@ -78,14 +78,16 @@ export class UpdatePostPageComponent implements OnInit, OnDestroy {
     if (!this.userPost) {
       return;
     }
-
     this.formGroup.patchValue({
       title: this.userPost.title,
       body: this.userPost.body,
     });
+  }
 
-    this.title.markAsDirty();
-    this.body.markAsDirty();
+  private onNavigateToHomePage(): void {
+    this.router.navigate(['../../../home-page'], {
+      relativeTo: this.activatedRoute,
+    });
   }
 
   protected onDeletePost(): void {
@@ -131,6 +133,9 @@ export class UpdatePostPageComponent implements OnInit, OnDestroy {
       body: this.body.value,
       user: this.userPost.user,
     };
+    if (!updatedPost) {
+      return;
+    }
     this.subscriptionsList.push(
       this.postService
         .updatePost(updatedPost)
@@ -159,11 +164,5 @@ export class UpdatePostPageComponent implements OnInit, OnDestroy {
         }
         this.onNavigateToHomePage();
       });
-  }
-
-  private onNavigateToHomePage(): void {
-    this.router.navigate(['../../../home-page'], {
-      relativeTo: this.activatedRoute,
-    });
   }
 }

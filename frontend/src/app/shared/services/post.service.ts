@@ -21,6 +21,22 @@ export class PostService {
   constructor(private httpClient: HttpClient) {}
 
   /**
+   * Get users data from /users API
+   * @returns Observable with list of users
+   */
+  private getAllUsers(): Observable<User[]> {
+    return this.httpClient.get<User[]>(`${URL.BASE}/users`);
+  }
+
+  /**
+   * Get posts data from /posts API
+   * @returns Observable with list of posts
+   */
+  private getAllPosts(): Observable<UserPost[]> {
+    return this.httpClient.get<UserPost[]>(`${URL.BASE}/posts`);
+  }
+
+  /**
    * Load data from /users and /posts API, modify them and save in the
    * @see{@link userPostList}
    * @returns Observable with Collection result model with returns @see{@link UserPost} list
@@ -85,22 +101,6 @@ export class PostService {
   }
 
   /**
-   * Get users data from /users API
-   * @returns Observable with list of users
-   */
-  private getAllUsers(): Observable<User[]> {
-    return this.httpClient.get<User[]>(`${URL.BASE}/users`);
-  }
-
-  /**
-   * Get posts data from /posts API
-   * @returns Observable with list of posts
-   */
-  private getAllPosts(): Observable<UserPost[]> {
-    return this.httpClient.get<UserPost[]>(`${URL.BASE}/posts`);
-  }
-
-  /**
    * Get user post list and modified them according to
    * pagination params
    * @param pageSize Current page size
@@ -135,10 +135,7 @@ export class PostService {
     const findPost = this.userPostList.find(
       (post: UserPost) => post.id === postId
     );
-    if (findPost) {
-      return of(findPost);
-    }
-    return of(null);
+    return of(findPost ? findPost : null);
   }
 
   /**
@@ -200,10 +197,6 @@ export class PostService {
     const postIndex = this.userPostList.findIndex(
       (post: UserPost) => post.id === createdPost.id
     );
-    if (postIndex !== -1) {
-      return of(true);
-    }
-
-    return of(false);
+    return of(postIndex !== -1 ? true : false);
   }
 }

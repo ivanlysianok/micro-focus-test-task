@@ -35,14 +35,14 @@
               mat-raised-button
               color="primary"
               class="me-2"
-              [disabled]="formGroup.invalid || !title.dirty || !body.dirty"
+              [disabled]="!title.value || !body.value"
               (click)="onUpdatePost()"
             >
               Save
             </button>
             <button
               mat-raised-button
-              [disabled]="formGroup.invalid || !title.dirty || !body.dirty"
+              [disabled]="!title.value || !body.value"
               (click)="onNavigateToHomePageWithConfirmation()"
             >
               Cancel

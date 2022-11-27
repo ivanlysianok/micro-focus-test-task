@@ -9,7 +9,7 @@ export class NotificationService {
    * Show snack bar notification with inserted message
    * @param message Message
    */
-  showNotification(message: string): void {
+  public showNotification(message: string): void {
     this.snackBar.open(message, 'Close', { duration: 2500 });
   }
 }

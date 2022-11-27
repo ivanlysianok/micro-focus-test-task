@@ -105,16 +105,19 @@ export class CreatePostPageComponent implements OnInit, OnDestroy {
       body: this.body.value,
       user: this.user,
     };
-    if (createdPost) {
-      this.subscriptionsList.push(
-        this.postService.createPost(createdPost).subscribe((response) => {
+    if (!createdPost) {
+      return;
+    }
+    this.subscriptionsList.push(
+      this.postService
+        .createPost(createdPost)
+        .subscribe((response: boolean) => {
           if (!response) {
             return;
           }
           this.notificationService.showNotification(NOTIFICATION.POST_CREATED);
           this.onNavigateToHomePage();
         })
-      );
-    }
+    );
   }
 }
