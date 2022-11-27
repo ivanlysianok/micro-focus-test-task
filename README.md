@@ -1,14 +1,9 @@
 # Micro Focus UI-exercise
 
-Angular exercise application for Micro Focus. 
+Angular post management application
 
-**Check out demo video:** https://www.youtube.com/watch?v=j8_htwyyVsk&ab_channel=IvanLysianok
+**Check out demo video:** https://www.youtube.com/watch?v=FwYA321cbVw&ab_channel=IvanLysianok
 
-### Overview of application pages
+## ![Alt text](/frontend/src/assets/images/cover.png?raw=true "Home page")
 
-Home page:
-## ![Alt text](/frontend/src/assets/images/MF-home-page.png?raw=true "Home page")
-Post page:
-## ![Alt text](/frontend/src/assets/images/MF-posts-page.png?raw=true "Post page")
-Login page:
-## ![Alt text](/frontend/src/assets/images/MF-login-page.png?raw=true "Login page")
+### Task
