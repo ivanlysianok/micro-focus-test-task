@@ -1,6 +1,4 @@
-# Micro Focus UI-exercise
-
-Angular post management application
+# Angular 14 - Post management application
 
 **Check out demo video:** https://www.youtube.com/watch?v=FwYA321cbVw&ab_channel=IvanLysianok
 
